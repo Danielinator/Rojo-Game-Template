@@ -1,3 +1,5 @@
+-- example module - remove in actual game
+
 local module = {}
 
 function module:HelloWorld()

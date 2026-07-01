@@ -1,15 +1,17 @@
+-- example module - remove in actual game
+
 local module = {}
 
 function module:HelloWorld()
-    print("Hello World!")
+	print("Hello World!")
 end
 
 function module:Start()
-    print("Start!")
+	print("Start!")
 end
 
 function module:Init()
-    print("Init!")
+	print("Init!")
 end
 
 return module

@@ -1,8 +1,12 @@
-{
-    "&properties": {
-        "Attributes": {
-            "ClientLoadPriority": {"Float64":0},
-            "ServerLoadPriority": 0
+{"properties": {
+    "Attributes": {
+        "ClientLoadPriority": {
+
+            "Float64": 0
+        },
+        "ServerLoadPriority": {
+
+            "Float64": 0
         }
     }
-}
+}}
