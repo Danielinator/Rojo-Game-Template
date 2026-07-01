@@ -13,7 +13,7 @@ reactRoblox = "jsdotlua/react-roblox@17.2.1"
 promise = "howmanysmall/typed-promise@4.0.6"
 shake = "sleitnick/shake@1.1.0"
 quaternion = "sleitnick/quaternion@0.2.3"
-
+dataService = "leifstout/dataservicetyped@1.0.4"
+networker = "leifstout/networker@0.3.1"
 
 [server-dependencies]
-profilestore = "lm-loleris/profilestore@1.0.3"

@@ -103,6 +103,16 @@ version = "1.2.7"
 dependencies = [["collections", "jsdotlua/collections@1.2.7"]]
 
 [[package]]
+name = "leifstout/dataservicetyped"
+version = "1.0.4"
+dependencies = [["Networker", "leifstout/networker@0.3.1"], ["ProfileStore", "lm-loleris/profilestore@1.0.3"], ["Signal", "sleitnick/signal@2.0.3"]]
+
+[[package]]
+name = "leifstout/networker"
+version = "0.3.1"
+dependencies = [["Signal", "sleitnick/signal@2.0.3"]]
+
+[[package]]
 name = "lm-loleris/profilestore"
 version = "1.0.3"
 dependencies = []
@@ -118,6 +128,11 @@ version = "1.1.0"
 dependencies = []
 
 [[package]]
+name = "sleitnick/signal"
+version = "2.0.3"
+dependencies = []
+
+[[package]]
 name = "sleitnick/table-util"
 version = "1.2.1"
 dependencies = []
@@ -130,4 +145,4 @@ dependencies = []
 [[package]]
 name = "user/template"
 version = "0.1.0"
-dependencies = [["promise", "howmanysmall/typed-promise@4.0.6"], ["quaternion", "sleitnick/quaternion@0.2.3"], ["react", "jsdotlua/react@17.2.1"], ["reactRoblox", "jsdotlua/react-roblox@17.2.1"], ["shake", "sleitnick/shake@1.1.0"], ["signal", "stravant/goodsignal@0.3.1"], ["tableUtil", "sleitnick/table-util@1.2.1"], ["topbarPlus", "1foreverhd/topbarplus@3.4.0"], ["profilestore", "lm-loleris/profilestore@1.0.3"]]
+dependencies = [["dataService", "leifstout/dataservicetyped@1.0.4"], ["networker", "leifstout/networker@0.3.1"], ["promise", "howmanysmall/typed-promise@4.0.6"], ["quaternion", "sleitnick/quaternion@0.2.3"], ["react", "jsdotlua/react@17.2.1"], ["reactRoblox", "jsdotlua/react-roblox@17.2.1"], ["shake", "sleitnick/shake@1.1.0"], ["signal", "stravant/goodsignal@0.3.1"], ["tableUtil", "sleitnick/table-util@1.2.1"], ["topbarPlus", "1foreverhd/topbarplus@3.4.0"]]

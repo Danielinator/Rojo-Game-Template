@@ -64,6 +64,7 @@ function Quaternion.new(x: number, y: number, z: number, w: number): Quaternion
 		Z = z,
 		W = w,
 	}, Quaternion) :: any
+
 	table.freeze(self)
 
 	return self

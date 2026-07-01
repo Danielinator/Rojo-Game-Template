@@ -1,0 +1,8 @@
+{
+    "&properties": {
+        "Attributes": {
+            "ClientLoadPriority" : 0,
+            "ServerLoadPriority" :0
+        }
+    }
+}

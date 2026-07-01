@@ -15,9 +15,6 @@
     "ServerScriptService": {
       "Server": {
         "$path": "src/server"
-      },
-      "ServerPackages": {
-        "$path": "ServerPackages"
       }
     },
 
@@ -31,7 +28,9 @@
 
     "Workspace": {
       "$properties": {
-        "FilteringEnabled": true
+        "FilteringEnabled": true,
+        "StreamingEnabled": true,
+        "UseNewLuauTypeSolver": "Enabled"
       },
       "Baseplate": {
         "$className": "Part",
@@ -59,9 +58,9 @@
     "Lighting": {
       "$properties": {
         "Ambient": [
-          0,
-          0,
-          0
+          0.274,
+          0.274,
+          0.274
         ],
         "Brightness": 2,
         "GlobalShadows": true,
