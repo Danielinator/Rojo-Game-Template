@@ -15,5 +15,6 @@ shake = "sleitnick/shake@1.1.0"
 quaternion = "sleitnick/quaternion@0.2.3"
 dataService = "leifstout/dataservicetyped@1.0.4"
 networker = "leifstout/networker@0.3.1"
+janitor = "howmanysmall/janitor@1.18.3"
 
 [server-dependencies]

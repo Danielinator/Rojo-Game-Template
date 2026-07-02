@@ -1,9 +1,9 @@
 local runService = game:GetService("RunService")
 
-local function debugPrint(server: boolean, client: boolean, clientDebug: boolean, text: string)
-	if server then
+local function debugPrint(server: boolean, client: boolean, debug: boolean, text: string)
+	if server and debug then
 		print(text)
-	elseif client and clientDebug then
+	elseif client and debug then
 		print(`DEBUG: {text}`)
 	end
 end
@@ -85,6 +85,21 @@ local loader = {}
 	should only use them when a module requires another module to load<br>
 	before it or if another module requires it to be loaded first.<br>
 	<br>
+	It is not reccomended to set priorities sequencially (e.g. 1,2,3,4)<br>
+	as this makes it more difficult to insert scripts inbetween existing<br>
+	priorities. You should instead use large multiples like 10, 100, 250, etc.<br>
+	as this doesn't change the order the scripts execute in and it allows<br>
+	you to add more scripts at another time. For the same reason, it is <br>
+	not reccomended to use 0 or -1 as a priority. An example of good usage:<br>
+	<pre>
+	script:                  priority:
+	importantScript          100
+	<b><i>newInbetweenScript       150</b></i>
+	scriptRelyingOnThat      200
+	generalScript            n/a (math.huge)
+	finalScript              -100
+	</pre>
+	
 	For each priority bucket, Modules are first required and then <br>
 	immediately initialised. Separate warnings will print to the console<br>
 	depending if the require() or the :Init() errored (hopefully, neither).<br>
@@ -99,8 +114,8 @@ local loader = {}
 	print to the console if it errors.
 	@param boolean? Optional arg that enables debug printing on the client
 ]=]
-function loader:LoadAll(clientDebugPrinting: boolean?)
-	clientDebugPrinting = clientDebugPrinting or false
+function loader:LoadAll(debugPrinting: boolean?)
+	debugPrinting = debugPrinting or false
 	local server = runService:IsServer()
 	local client = runService:IsClient()
 
@@ -145,9 +160,11 @@ function loader:LoadAll(clientDebugPrinting: boolean?)
 	-- Init modules
 
 	for index, modulePriorityLevel in orderedModules do
-		debugPrint(server, client, clientDebugPrinting, `Loading modules at priority level: {loadPriorities[index]}`)
+		debugPrint(server, client, debugPrinting, `Loading modules at priority level: {loadPriorities[index]}`)
+
 		for _, module in modulePriorityLevel do
-			debugPrint(server, client, clientDebugPrinting, `Loading module: {module}`)
+			debugPrint(server, client, debugPrinting, `Loading module: {module}`)
+
 			local success, result = pcall(function()
 				return require(module)
 			end)
@@ -155,11 +172,15 @@ function loader:LoadAll(clientDebugPrinting: boolean?)
 				warn(`{module.Name} failed to load: {result}`)
 				continue
 			end
+
+			if type(result) ~= "table" then
+				continue
+			end
 			modules[module.Name] = result
+
 			if not result.Init then
 				continue
 			end
-
 			local success2, err = pcall(function()
 				result:Init()
 			end)
