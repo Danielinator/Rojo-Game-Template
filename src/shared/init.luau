@@ -112,7 +112,7 @@ local loader = {}
 	After all modules have been required and initialised, :Start()<br>
 	is called on each module if :Start() exists, and a warning will<br>
 	print to the console if it errors.
-	@param boolean? Optional arg that enables debug printing on the client
+	@param boolean? Optional arg that enables debug printing
 ]=]
 function loader:LoadAll(debugPrinting: boolean?)
 	debugPrinting = debugPrinting or false
