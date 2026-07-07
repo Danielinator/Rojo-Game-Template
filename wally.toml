@@ -6,10 +6,9 @@ realm = "shared"
 
 [dependencies]
 signal = "stravant/goodsignal@0.3.1"
-react = "jsdotlua/react@17.2.1"
+fusion = "thecreare/fusion@0.4.0-dev1"
 topbarPlus = "1foreverhd/topbarplus@3.4.0"
 tableUtil = "sleitnick/table-util@1.2.1"
-reactRoblox = "jsdotlua/react-roblox@17.2.1"
 promise = "howmanysmall/typed-promise@4.0.6"
 shake = "sleitnick/shake@1.1.0"
 quaternion = "sleitnick/quaternion@0.2.3"
