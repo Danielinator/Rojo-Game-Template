@@ -15,7 +15,7 @@ quaternion = "sleitnick/quaternion@0.2.3"
 dataService = "leifstout/dataservicetyped@1.0.4"
 networker = "leifstout/networker@0.3.1"
 janitor = "howmanysmall/janitor@1.18.3"
-type = "osyrisrblx/t@3.1.1"
+t = "osyrisrblx/t@3.1.1"
 observers = "sleitnick/observers@0.5.0"
 
 
