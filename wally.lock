@@ -38,6 +38,16 @@ version = "1.0.3"
 dependencies = []
 
 [[package]]
+name = "osyrisrblx/t"
+version = "3.1.1"
+dependencies = []
+
+[[package]]
+name = "sleitnick/observers"
+version = "0.5.0"
+dependencies = []
+
+[[package]]
 name = "sleitnick/quaternion"
 version = "0.2.3"
 dependencies = []
@@ -70,4 +80,4 @@ dependencies = []
 [[package]]
 name = "user/template"
 version = "0.1.0"
-dependencies = [["dataService", "leifstout/dataservicetyped@1.0.4"], ["fusion", "thecreare/fusion@0.4.0-dev1"], ["janitor", "howmanysmall/janitor@1.18.3"], ["networker", "leifstout/networker@0.3.1"], ["promise", "howmanysmall/typed-promise@4.0.6"], ["quaternion", "sleitnick/quaternion@0.2.3"], ["shake", "sleitnick/shake@1.1.0"], ["signal", "stravant/goodsignal@0.3.1"], ["tableUtil", "sleitnick/table-util@1.2.1"], ["topbarPlus", "1foreverhd/topbarplus@3.4.0"]]
+dependencies = [["dataService", "leifstout/dataservicetyped@1.0.4"], ["fusion", "thecreare/fusion@0.4.0-dev1"], ["janitor", "howmanysmall/janitor@1.18.3"], ["networker", "leifstout/networker@0.3.1"], ["observers", "sleitnick/observers@0.5.0"], ["promise", "howmanysmall/typed-promise@4.0.6"], ["quaternion", "sleitnick/quaternion@0.2.3"], ["shake", "sleitnick/shake@1.1.0"], ["signal", "stravant/goodsignal@0.3.1"], ["tableUtil", "sleitnick/table-util@1.2.1"], ["topbarPlus", "1foreverhd/topbarplus@3.4.0"], ["type", "osyrisrblx/t@3.1.1"]]
