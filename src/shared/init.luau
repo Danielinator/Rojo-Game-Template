@@ -115,6 +115,7 @@ local loader = {}
 	@param boolean? Optional arg that enables debug printing
 ]=]
 function loader:LoadAll(debugPrinting: boolean?)
+	local startTime = DateTime.now().UnixTimestampMillis
 	debugPrinting = debugPrinting or false
 	local server = runService:IsServer()
 	local client = runService:IsClient()
@@ -204,6 +205,10 @@ function loader:LoadAll(debugPrinting: boolean?)
 			warn(`{name} failed to start: {err}`)
 		end
 	end
+
+	print(
+		`It took {string.format("%.3f", ((DateTime.now().UnixTimestampMillis - startTime) / 1000))} seconds to load {#allModules} modules!`
+	)
 end
 
 return loader
