@@ -1,4 +1,3 @@
-local replicatedStorage = game:GetService("ReplicatedStorage")
-local loader = require(replicatedStorage.Shared)
+local loader = require("@game/ReplicatedStorage/Shared")
 
 loader:LoadAll(true)

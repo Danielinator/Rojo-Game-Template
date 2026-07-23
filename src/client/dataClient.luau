@@ -1,6 +1,5 @@
 local module = {}
 
-local replicatedStorage = game:GetService("ReplicatedStorage")
-local dataClient = require(replicatedStorage.Shared.playerData).client
+local dataClient = require("@game/ReplicatedStorage/Packages/dataService").client
 
 return module

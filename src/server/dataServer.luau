@@ -1,7 +1,6 @@
 local module = {}
 
-local replicatedStorage = game:GetService("ReplicatedStorage")
-local dataModule = require(replicatedStorage.Shared.playerData)
+local dataModule = require("@game/ReplicatedStorage/Shared/playerData")
 local dataServer = dataModule.server
 
 function dataServer.Service:onPlayerInit(plr, data)

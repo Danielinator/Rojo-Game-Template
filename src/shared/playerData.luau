@@ -1,5 +1,4 @@
-local replicatedStorage = game:GetService("ReplicatedStorage")
-local data = require(replicatedStorage.Packages.dataService)
+local data = require("@game/ReplicatedStorage/Packages/dataService")
 
 local template = {
 	playtime = 0,
