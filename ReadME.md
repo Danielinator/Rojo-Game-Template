@@ -1,10 +1,3 @@
-install rokit
+setup with ./setup/setUp
 
-rokit add rojo
-rojo init
-rokit add wally
-wally init
-
-wally install
-rojo sourcemap default.project.json --output sourcemap.json
-wally-package-types --sourcemap sourcemap.json Packages
+you can pass "aftman add" or "rokit add" or "rokit add --global" to setUp. you must pass something

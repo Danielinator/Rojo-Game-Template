@@ -9,6 +9,9 @@
       },
       "Packages": {
         "$path": "Packages"
+      },
+      "Components": {
+        "$path": "Components"
       }
     },
 
@@ -53,19 +56,6 @@
             512
           ]
         }
-      }
-    },
-    "Lighting": {
-      "$properties": {
-        "Ambient": [
-          0.274,
-          0.274,
-          0.274
-        ],
-        "Brightness": 2,
-        "GlobalShadows": true,
-        "Outlines": false,
-        "Technology": "Voxel"
       }
     },
     "SoundService": {

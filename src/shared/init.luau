@@ -139,7 +139,8 @@ function loader:LoadAll(debugPrinting: boolean?)
 		serverOrClientPriority = "ServerLoadPriority"
 	elseif client then
 		local playerScripts = game:GetService("StarterPlayer"):WaitForChild("StarterPlayerScripts")
-		serverOrClientModules = playerScripts:WaitForChild("Client"):GetChildren() :: { ModuleScript }
+		serverOrClientModules =
+			playerScripts:WaitForChild("Client"):GetChildren() :: { ModuleScript }
 		serverOrClientPriority = "ClientLoadPriority"
 	end
 
@@ -152,7 +153,8 @@ function loader:LoadAll(debugPrinting: boolean?)
 	for index, priority in loadPriorities do
 		orderedModules[index] = {}
 		for _, module in allModules do
-			local moduleLoadPriority = module:GetAttribute(serverOrClientPriority) or math.huge :: number
+			local moduleLoadPriority = module:GetAttribute(serverOrClientPriority)
+				or math.huge :: number
 			if moduleLoadPriority == priority then
 				table.insert(orderedModules[index], module)
 			end
@@ -161,7 +163,12 @@ function loader:LoadAll(debugPrinting: boolean?)
 	-- Init modules
 
 	for index, modulePriorityLevel in orderedModules do
-		debugPrint(server, client, debugPrinting, `Loading modules at priority level: {loadPriorities[index]}`)
+		debugPrint(
+			server,
+			client,
+			debugPrinting,
+			`Loading modules at priority level: {loadPriorities[index]}`
+		)
 
 		for _, module in modulePriorityLevel do
 			debugPrint(server, client, debugPrinting, `Loading module: {module}`)

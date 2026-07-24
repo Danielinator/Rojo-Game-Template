@@ -7,5 +7,9 @@
 
 sourcemap.json
 wally.lock
+.stylua.toml
+selene.toml
+rokit.toml
+aftman.toml
 
 Packages
