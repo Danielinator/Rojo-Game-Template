@@ -1,5 +1,10 @@
 local runService = game:GetService("RunService")
 
+type module = {
+	Start: (module) -> (),
+	Init: (module) -> (),
+}
+
 local function debugPrint(server: boolean, client: boolean, debug: boolean, text: string)
 	if server and debug then
 		print(text)
@@ -42,7 +47,7 @@ local function makePriorityTable(modules: { ModuleScript }, attributeName: strin
 	local priorities: { number } = {}
 
 	for _, module in modules do
-		local priority = module:GetAttribute(attributeName) or math.huge :: number
+		local priority = (module:GetAttribute(attributeName) or math.huge) :: number
 		if not numberInList(priorities, priority) then
 			table.insert(priorities, priority)
 		end
@@ -120,12 +125,12 @@ function loader:LoadAll(debugPrinting: boolean?)
 	local server = runService:IsServer()
 	local client = runService:IsClient()
 
-	local sharedModules: { ModuleScript } = script:GetChildren()
+	local sharedModules = script:GetChildren() :: { ModuleScript }
 	local serverOrClientModules: { ModuleScript } = {}
 	local allModules: { ModuleScript } = {}
 
 	local takenNames: { [string]: boolean } = {}
-	local modules: { [string]: any } = {}
+	local modules: { [string]: any } & module = {}
 
 	local loadPriorities: { number } = {}
 	local serverOrClientPriority = ""
@@ -174,7 +179,7 @@ function loader:LoadAll(debugPrinting: boolean?)
 			debugPrint(server, client, debugPrinting, `Loading module: {module}`)
 
 			local success, result = pcall(function()
-				return require(module)
+				return require(module) :: module
 			end)
 			if not success then
 				warn(`{module.Name} failed to load: {result}`)
