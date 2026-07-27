@@ -5,18 +5,18 @@ registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 
 [dependencies]
+shake = "sleitnick/shake@1.1.0"
+quaternion = "sleitnick/quaternion@0.2.3"
+observers = "sleitnick/observers@0.5.0"
+tableUtil = "sleitnick/table-util@1.2.1"
+promise = "howmanysmall/typed-promise@4.0.6"
+janitor = "howmanysmall/janitor@1.18.3"
+dataService = "leifstout/dataservicetyped@1.0.4"
+networker = "leifstout/networker@0.3.1"
 signal = "lucasmzreal/fastsignal@10.4.0"
 vide = "centau/vide@0.4.1"
 topbarPlus = "1foreverhd/topbarplus@3.4.0"
-tableUtil = "sleitnick/table-util@1.2.1"
-promise = "howmanysmall/typed-promise@4.0.6"
-shake = "sleitnick/shake@1.1.0"
-quaternion = "sleitnick/quaternion@0.2.3"
-dataService = "leifstout/dataservicetyped@1.0.4"
-networker = "leifstout/networker@0.3.1"
-janitor = "howmanysmall/janitor@1.18.3"
 t = "osyrisrblx/t@3.1.1"
-observers = "sleitnick/observers@0.5.0"
 
 
 [server-dependencies]
