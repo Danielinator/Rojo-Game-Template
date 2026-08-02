@@ -1,5 +1,5 @@
 local module = {}
 
-local dataClient = require("@shared/playerData").client
+const dataClient = require("@shared/playerData").client
 
 return module

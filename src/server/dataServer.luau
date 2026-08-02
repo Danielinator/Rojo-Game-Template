@@ -1,7 +1,7 @@
 local module = {}
 
-local dataModule = require("@shared/playerData")
-local dataServer = dataModule.server
+const dataModule = require("@shared/playerData")
+const dataServer = dataModule.server
 
 function dataServer.Service:onPlayerInit(plr, data)
 	local time = os.time()

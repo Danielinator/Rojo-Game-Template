@@ -1,4 +1,4 @@
-local runService = game:GetService("RunService")
+const runService = game:GetService("RunService")
 
 type module = {
 	Start: (module) -> (),

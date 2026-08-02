@@ -1,4 +1,4 @@
-local data = require("@packages/dataService")
+const data = require("@packages/dataService")
 
 local template = {
 	playtime = 0,

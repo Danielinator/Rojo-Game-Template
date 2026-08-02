@@ -1,3 +1,3 @@
-local loader = require("@shared")
+const loader = require("@shared")
 
 loader:LoadAll(true)
