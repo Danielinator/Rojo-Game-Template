@@ -1,4 +1,4 @@
-local data = require("@game/ReplicatedStorage/Packages/dataService")
+local data = require("@packages/dataService")
 
 local template = {
 	playtime = 0,

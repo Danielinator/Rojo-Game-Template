@@ -1,5 +1,5 @@
 local module = {}
 
-local dataClient = require("@game/ReplicatedStorage/Shared/playerData").client
+local dataClient = require("@shared/playerData").client
 
 return module

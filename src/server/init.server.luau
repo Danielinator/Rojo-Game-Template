@@ -1,3 +1,3 @@
-local loader = require("@game/ReplicatedStorage/Shared")
+local loader = require("@shared")
 
 loader:LoadAll(true)

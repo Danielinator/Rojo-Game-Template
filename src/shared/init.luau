@@ -140,12 +140,11 @@ function loader:LoadAll(debugPrinting: boolean?)
 
 	if server then
 		local serverScriptService = game:GetService("ServerScriptService")
-		serverOrClientModules = serverScriptService.Server:GetChildren() :: { ModuleScript }
+		serverOrClientModules = serverScriptService.server:GetChildren() :: { ModuleScript }
 		serverOrClientPriority = "ServerLoadPriority"
 	elseif client then
 		local playerScripts = game:GetService("StarterPlayer"):WaitForChild("StarterPlayerScripts")
-		serverOrClientModules =
-			playerScripts:WaitForChild("Client"):GetChildren() :: { ModuleScript }
+		serverOrClientModules = playerScripts.client:GetChildren() :: { ModuleScript }
 		serverOrClientPriority = "ClientLoadPriority"
 	end
 
