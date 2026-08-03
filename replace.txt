@@ -1,9 +1,9 @@
 local aliases = {
 	["@client"] = "@game/StarterPlayer/StarterPlayerScripts/client",
 	["@server"] = "@game/ServerScriptService/server",
-	["@shared"] = "@game/ReplicatedStorage/shared",
-	["@components"] = "@game/ReplicatedStorage/components",
-	["@packages"] = "@game/ReplicatedStorage/packages",
+	["@shared"] = "@game/ReplicatedStorage/Scripting/Shared",
+	["@components"] = "@game/ReplicatedStorage/Scripting/Components",
+	["@packages"] = "@game/ReplicatedStorage/Scripting/Packages",
 }
 
 local Error = require(script.Parent.Error)
