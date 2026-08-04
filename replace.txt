@@ -1,6 +1,6 @@
 local aliases = {
-	["@client"] = "@game/StarterPlayer/StarterPlayerScripts/client",
-	["@server"] = "@game/ServerScriptService/server",
+	["@client"] = "@game/StarterPlayer/StarterPlayerScripts/Client",
+	["@server"] = "@game/ServerScriptService/Server",
 	["@shared"] = "@game/ReplicatedStorage/Scripting/Shared",
 	["@components"] = "@game/ReplicatedStorage/Scripting/Components",
 	["@packages"] = "@game/ReplicatedStorage/Scripting/Packages",
