@@ -16,9 +16,11 @@ You may need to delete existing files and resync them to apply changes to all fi
 reccomended stylua settings(.stylua.toml):
 call_parentheses = "Input" 
 column_width = 100
+syntax = "Luau"
 
 // this will make sure stylua doesn't make things like 
 vide,create "Frame" {} become vide.create("Frame")({}). Also makes sure columns aren't too big.
+also also makes sure stylua works with all luau syntax
 
 reccomended selene settings (selene.toml):
 std = "roblox"
