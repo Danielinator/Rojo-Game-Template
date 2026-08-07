@@ -1,5 +1,7 @@
 const runService = game:GetService("RunService")
 
+const t = require("@packages/t")
+
 type module = {
 	Start: (module) -> (),
 	Init: (module) -> (),
@@ -48,6 +50,9 @@ local function makePriorityTable(modules: { ModuleScript }, attributeName: strin
 
 	for _, module in modules do
 		local priority = (module:GetAttribute(attributeName) or math.huge) :: number
+		if not t.number(priority) then
+			priority = math.huge
+		end
 		if not numberInList(priorities, priority) then
 			table.insert(priorities, priority)
 		end
@@ -62,6 +67,26 @@ local function makePriorityTable(modules: { ModuleScript }, attributeName: strin
 	end)
 
 	return priorities
+end
+
+-- returns a function that creates a warning every 5 seconds when a module takes over
+-- 10 seconds to load
+local function createWatcherFunction(moduleName: string, requireOrInit: string)
+	return function()
+		local timeElapsed = 0
+		local nextWarning = 10
+		while true do
+			if timeElapsed > nextWarning then
+				warn(
+					(`{moduleName} has taken over {nextWarning} seconds to {requireOrInit}! Time elapsed: %.2f`):format(
+						timeElapsed
+					)
+				)
+				nextWarning += 5
+			end
+			timeElapsed += task.wait()
+		end
+	end
 end
 
 local loader = {}
@@ -116,7 +141,11 @@ local loader = {}
 	<br>
 	After all modules have been required and initialised, :Start()<br>
 	is called on each module if :Start() exists, and a warning will<br>
-	print to the console if it errors.
+	print to the console if it errors.<br><br>
+
+	If the require() or the :Init() yeilds, so will the module loader.<br>
+	It is only safe to yield in :Start()
+
 	@param boolean? Optional arg that enables debug printing
 ]=]
 function loader:LoadAll(debugPrinting: boolean?)
@@ -140,6 +169,7 @@ function loader:LoadAll(debugPrinting: boolean?)
 
 	if server then
 		local serverScriptService = game:GetService("ServerScriptService")
+
 		serverOrClientModules = serverScriptService.Server:GetChildren() :: { ModuleScript }
 		serverOrClientPriority = "ServerLoadPriority"
 	elseif client then
@@ -159,6 +189,9 @@ function loader:LoadAll(debugPrinting: boolean?)
 		for _, module in allModules do
 			local moduleLoadPriority = module:GetAttribute(serverOrClientPriority)
 				or math.huge :: number
+			if not t.number(moduleLoadPriority) then
+				moduleLoadPriority = math.huge
+			end
 			if moduleLoadPriority == priority then
 				table.insert(orderedModules[index], module)
 			end
@@ -177,9 +210,14 @@ function loader:LoadAll(debugPrinting: boolean?)
 		for _, module in modulePriorityLevel do
 			debugPrint(server, client, debugPrinting, `Loading module: {module}`)
 
+			local requireTimer = task.spawn(createWatcherFunction(module.Name, "load"))
+
 			local success, result = pcall(function()
 				return require(module) :: module
 			end)
+
+			coroutine.close(requireTimer)
+
 			if not success then
 				warn(`{module.Name} failed to load: {result}`)
 				continue
@@ -193,12 +231,17 @@ function loader:LoadAll(debugPrinting: boolean?)
 			if not result.Init then
 				continue
 			end
+
+			local initTimer = task.spawn(createWatcherFunction(module.Name, "init"))
+
 			local success2, err = pcall(function()
 				result:Init()
 			end)
 			if not success2 then
 				warn(`{module.Name} failed to init: {err}`)
 			end
+
+			coroutine.close(initTimer)
 		end
 	end
 
@@ -208,13 +251,14 @@ function loader:LoadAll(debugPrinting: boolean?)
 		if not module.Start then
 			continue
 		end
-
-		local success, err = pcall(function()
-			module:Start()
+		task.spawn(function()
+			local success, err = pcall(function()
+				module:Start()
+			end)
+			if not success then
+				warn(`{name} failed to start: {err}`)
+			end
 		end)
-		if not success then
-			warn(`{name} failed to start: {err}`)
-		end
 	end
 
 	print(
