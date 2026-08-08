@@ -216,7 +216,7 @@ function loader:LoadAll(debugPrinting: boolean?)
 				return require(module) :: module
 			end)
 
-			coroutine.close(requireTimer)
+			task.cancel(requireTimer)
 
 			if not success then
 				warn(`{module.Name} failed to load: {result}`)
@@ -241,7 +241,7 @@ function loader:LoadAll(debugPrinting: boolean?)
 				warn(`{module.Name} failed to init: {err}`)
 			end
 
-			coroutine.close(initTimer)
+			task.cancel(initTimer)
 		end
 	end
 
