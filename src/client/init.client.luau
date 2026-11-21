@@ -1,3 +1,3 @@
-const loader = require("@shared/init")
+const loader = require("@shared")
 
 loader:LoadAll(true)
