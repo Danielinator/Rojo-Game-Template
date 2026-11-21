@@ -2,6 +2,7 @@ local module = {}
 
 const dataModule = require("@shared/playerData")
 const dataServer = dataModule.server
+dataServer.Service:init() -- fixes some bug with dataService
 
 function dataServer.Service:onPlayerInit(plr, data)
 	local time = os.time()
