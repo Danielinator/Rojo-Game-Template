@@ -1,8 +1,6 @@
-setup with ./setup/setUp
-
-you can pass "aftman add" or "rokit add" or "rokit add --global" to setUp. you must pass something
-
 you must run rokit init / aftman init before setup
+
+setup with ./setup/setUp - you can pass "aftman add" or "rokit add" or "rokit add --global" to setUp. you must pass something
 
 How to modify rojo to allow for custom aliases: (required)
 
