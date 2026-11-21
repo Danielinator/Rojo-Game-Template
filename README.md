@@ -19,7 +19,7 @@ column_width = 100
 syntax = "Luau"
 
 // this will make sure stylua doesn't make things like 
-fluid,create "Frame" {} become fluid.create("Frame")({}). Also makes sure columns aren't too big.
+vide.create "Frame" {} become vide.create("Frame")({}). Also makes sure columns aren't too big.
 also also makes sure stylua works with all luau syntax
 
 reccomended selene settings (selene.toml):
@@ -27,4 +27,4 @@ std = "roblox"
 
 [rules]
 mixed_table = "allow"
-// this will make selene recognise your are working with roblox and not yell at you when working with fluid
+// this will make selene recognise your are working with roblox and not yell at you when working with vide
