@@ -7,11 +7,25 @@ type module = {
 	Init: (module) -> (),
 }
 
-local function debugPrint(server: boolean, client: boolean, debug: boolean, text: string)
-	if server and debug then
+local function debugPrint(
+	server: boolean,
+	client: boolean,
+	debug: boolean,
+	text: string,
+	benchmark: boolean?,
+	benchmarkingEnabled: boolean?
+)
+	if benchmark and not benchmarkingEnabled then
+		return
+	end
+	if server and (debug or benchmark) then
 		print(text)
-	elseif client and debug then
-		print(`DEBUG: {text}`)
+	elseif client then
+		if debug then
+			print(`DEBUG: {text}`)
+		elseif benchmarkingEnabled then
+			print(`BENCHMARK: {text}`)
+		end
 	end
 end
 
@@ -78,7 +92,7 @@ local function createWatcherFunction(moduleName: string, requireOrInit: string)
 		while true do
 			if timeElapsed > nextWarning then
 				warn(
-					(`{moduleName} has taken over {nextWarning} seconds to {requireOrInit}! Time elapsed: %.2f`):format(
+					(`{moduleName} has taken over {nextWarning} seconds to {requireOrInit}! Time elapsed: %.1i`):format(
 						timeElapsed
 					)
 				)
@@ -146,9 +160,10 @@ local loader = {}
 	If the require() or the :Init() yeilds, so will the module loader.<br>
 	It is only safe to yield in :Start()
 
-	@param boolean? Optional arg that enables debug printing
+	@param debugPrinting boolean? Optional arg that enables debug printing
+	@param benchmarkPrinting boolean? Optional arg that enables benchmark printing
 ]=]
-function loader:LoadAll(debugPrinting: boolean?)
+function loader:LoadAll(debugPrinting: boolean?, benchmarkPrinting: boolean?)
 	local startTime = DateTime.now().UnixTimestampMillis
 	debugPrinting = debugPrinting or false
 	local server = runService:IsServer()
@@ -211,11 +226,20 @@ function loader:LoadAll(debugPrinting: boolean?)
 			debugPrint(server, client, debugPrinting, `Loading module: {module}`)
 
 			local requireTimer = task.spawn(createWatcherFunction(module.Name, "load"))
+			local moduleStartTime = os.clock()
 
 			local success, result = pcall(function()
 				return require(module) :: module
 			end)
 
+			debugPrint(
+				server,
+				client,
+				debugPrinting,
+				(`{module.Name} took %.3fs to load`):format(os.clock() - moduleStartTime),
+				true,
+				benchmarkPrinting
+			)
 			task.cancel(requireTimer)
 
 			if not success then
@@ -233,6 +257,7 @@ function loader:LoadAll(debugPrinting: boolean?)
 			end
 
 			local initTimer = task.spawn(createWatcherFunction(module.Name, "init"))
+			moduleStartTime = os.clock()
 
 			local success2, err = pcall(function()
 				result:Init()
@@ -241,6 +266,14 @@ function loader:LoadAll(debugPrinting: boolean?)
 				warn(`{module.Name} failed to init: {err}`)
 			end
 
+			debugPrint(
+				server,
+				client,
+				debugPrinting,
+				(`{module.Name} took %.3fs to load`):format(os.clock() - moduleStartTime),
+				true,
+				benchmarkPrinting
+			)
 			task.cancel(initTimer)
 		end
 	end

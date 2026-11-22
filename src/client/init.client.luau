@@ -1,3 +1,3 @@
 const loader = require("@shared")
 
-loader:LoadAll(true)
+loader:LoadAll(true, true)
