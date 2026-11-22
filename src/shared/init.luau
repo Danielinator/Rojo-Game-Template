@@ -21,10 +21,10 @@ local function debugPrint(
 	if server and (debug or benchmark) then
 		print(text)
 	elseif client then
-		if debug then
-			print(`DEBUG: {text}`)
-		elseif benchmarkingEnabled then
+		if benchmarkingEnabled then
 			print(`BENCHMARK: {text}`)
+		elseif debug then
+			print(`DEBUG: {text}`)
 		end
 	end
 end
