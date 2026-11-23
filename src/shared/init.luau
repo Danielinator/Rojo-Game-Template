@@ -237,6 +237,7 @@ function loader:LoadAll(debugPrinting: boolean?, benchmarkPrinting: boolean?)
 	local serverOrClientModules: { ModuleScript } = {}
 	local allModules: { ModuleScript } = {}
 
+	local pendingModules = 0
 	local takenNames: { [string]: boolean } = {}
 	local modules: { [string]: any } & module = {}
 
@@ -289,50 +290,68 @@ function loader:LoadAll(debugPrinting: boolean?, benchmarkPrinting: boolean?)
 		)
 
 		for _, module in modulePriorityLevel do
+			pendingModules += 1
 			if module:GetAttribute(serverOrClientPriorityEnabled) then
 				loadModule(server, client, debugPrinting, benchmarkPrinting, module, modules)
+				pendingModules -= 1
 			else
-				task.spawn(
-					loadModule,
-					server,
-					client,
-					debugPrinting,
-					benchmarkPrinting,
-					module,
-					modules
-				)
+				task.spawn(function()
+					loadModule(
+						server,
+						client,
+						debugPrinting :: boolean,
+						benchmarkPrinting,
+						module,
+						modules
+					)
+					pendingModules -= 1
+				end)
 			end
 		end
 	end
 
 	-- Start modules
-
-	for name, module in modules do
-		if not module.Start then
-			continue
-		end
-		task.spawn(function()
-			debugPrint(server, client, debugPrinting :: boolean, `Loading module: {module}`)
-			local startTimer = task.spawn(createWatcherFunction(module.Name, "start"))
-			local moduleStartTime = os.clock()
-			local success, err = pcall(function()
-				module:Start()
-			end)
-			if not success then
-				warn(`{name} failed to start: {err}`)
+	task.spawn(function()
+		repeat
+			task.wait()
+		until pendingModules == 0
+		for name, module in modules do
+			if not module.Start then
+				continue
 			end
-			debugPrint(
-				server,
-				client,
-				debugPrinting :: boolean,
-				(`{module.Name} took %.3fs to start`):format(os.clock() - moduleStartTime),
-				true,
-				benchmarkPrinting
-			)
-			task.cancel(startTimer)
-		end)
-	end
-
+			pendingModules += 1
+			task.spawn(function()
+				debugPrint(server, client, debugPrinting :: boolean, `Loading module: {module}`)
+				local startTimer = task.spawn(createWatcherFunction(module.Name, "start"))
+				local moduleStartTime = os.clock()
+				local success, err = pcall(function()
+					module:Start()
+				end)
+				if not success then
+					warn(`{name} failed to start: {err}`)
+				end
+				debugPrint(
+					server,
+					client,
+					debugPrinting :: boolean,
+					(`{module.Name} took %.3fs to start`):format(os.clock() - moduleStartTime),
+					true,
+					benchmarkPrinting
+				)
+				task.cancel(startTimer)
+				pendingModules -= 1
+			end)
+		end
+		repeat
+			task.wait()
+		until pendingModules == 0
+		print(
+			`It took {string.format(
+				"%.3f",
+				((DateTime.now().UnixTimestampMillis - startTime) / 1000)
+			)} seconds to fully load {#allModules} modules!`
+		)
+	end)
 	print(
 		`It took {string.format("%.3f", ((DateTime.now().UnixTimestampMillis - startTime) / 1000))} seconds to load {#allModules} modules!`
 	)
