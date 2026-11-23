@@ -103,6 +103,68 @@ local function createWatcherFunction(moduleName: string, requireOrInit: string)
 	end
 end
 
+local function loadModule(
+	server,
+	client,
+	debugPrinting,
+	benchmarkPrinting,
+	module: ModuleScript,
+	modules: { [string]: any } & module
+)
+	debugPrint(server, client, debugPrinting, `Loading module: {module}`)
+
+	local requireTimer = task.spawn(createWatcherFunction(module.Name, "load"))
+	local moduleStartTime = os.clock()
+
+	local success, result = pcall(function()
+		return require(module) :: module
+	end)
+
+	debugPrint(
+		server,
+		client,
+		debugPrinting,
+		(`{module.Name} took %.3fs to load`):format(os.clock() - moduleStartTime),
+		true,
+		benchmarkPrinting
+	)
+	task.cancel(requireTimer)
+
+	if not success then
+		warn(`{module.Name} failed to load: {result}`)
+		return
+	end
+
+	if type(result) ~= "table" then
+		return
+	end
+	modules[module.Name] = result
+
+	if not result.Init then
+		return
+	end
+
+	local initTimer = task.spawn(createWatcherFunction(module.Name, "init"))
+	moduleStartTime = os.clock()
+
+	local success2, err = pcall(function()
+		result:Init()
+	end)
+	if not success2 then
+		warn(`{module.Name} failed to init: {err}`)
+	end
+
+	debugPrint(
+		server,
+		client,
+		debugPrinting,
+		(`{module.Name} took %.3fs to load`):format(os.clock() - moduleStartTime),
+		true,
+		benchmarkPrinting
+	)
+	task.cancel(initTimer)
+end
+
 local loader = {}
 
 --[=[
@@ -120,6 +182,8 @@ local loader = {}
 	number is (the closer to 0 it is), the later it will load.<br>
 	For example, a module with a priority of -1 will load after<br>
 	a module with a priority of -2,-3,-10, etc.<br>
+	A module will be loaded in paralell unless it has a<br>
+	LoadPriorityEnabledClient or LoadPriorityEnabledServer attribute.<br>
 	<br>
 	You do not need to set the attributes for each module - if the<br>
 	module has no attribute, the loader assumes its priority is<br>
@@ -178,19 +242,21 @@ function loader:LoadAll(debugPrinting: boolean?, benchmarkPrinting: boolean?)
 
 	local loadPriorities: { number } = {}
 	local serverOrClientPriority = ""
+	local serverOrClientPriorityEnabled = ""
 	local orderedModules: { { ModuleScript } } = {}
 
 	-- Get if server or local
 
 	if server then
 		local serverScriptService = game:GetService("ServerScriptService")
-
 		serverOrClientModules = serverScriptService.Server:GetChildren() :: { ModuleScript }
 		serverOrClientPriority = "ServerLoadPriority"
+		serverOrClientPriorityEnabled = "LoadPriorityEnabledServer"
 	elseif client then
 		local playerScripts = game:GetService("StarterPlayer"):WaitForChild("StarterPlayerScripts")
 		serverOrClientModules = playerScripts.Client:GetChildren() :: { ModuleScript }
 		serverOrClientPriority = "ClientLoadPriority"
+		serverOrClientPriorityEnabled = "LoadPriorityEnabledClient"
 	end
 
 	-- Combine modules
@@ -223,58 +289,19 @@ function loader:LoadAll(debugPrinting: boolean?, benchmarkPrinting: boolean?)
 		)
 
 		for _, module in modulePriorityLevel do
-			debugPrint(server, client, debugPrinting, `Loading module: {module}`)
-
-			local requireTimer = task.spawn(createWatcherFunction(module.Name, "load"))
-			local moduleStartTime = os.clock()
-
-			local success, result = pcall(function()
-				return require(module) :: module
-			end)
-
-			debugPrint(
-				server,
-				client,
-				debugPrinting,
-				(`{module.Name} took %.3fs to load`):format(os.clock() - moduleStartTime),
-				true,
-				benchmarkPrinting
-			)
-			task.cancel(requireTimer)
-
-			if not success then
-				warn(`{module.Name} failed to load: {result}`)
-				continue
+			if module:GetAttribute(serverOrClientPriorityEnabled) then
+				loadModule(server, client, debugPrinting, benchmarkPrinting, module, modules)
+			else
+				task.spawn(
+					loadModule,
+					server,
+					client,
+					debugPrinting,
+					benchmarkPrinting,
+					module,
+					modules
+				)
 			end
-
-			if type(result) ~= "table" then
-				continue
-			end
-			modules[module.Name] = result
-
-			if not result.Init then
-				continue
-			end
-
-			local initTimer = task.spawn(createWatcherFunction(module.Name, "init"))
-			moduleStartTime = os.clock()
-
-			local success2, err = pcall(function()
-				result:Init()
-			end)
-			if not success2 then
-				warn(`{module.Name} failed to init: {err}`)
-			end
-
-			debugPrint(
-				server,
-				client,
-				debugPrinting,
-				(`{module.Name} took %.3fs to load`):format(os.clock() - moduleStartTime),
-				true,
-				benchmarkPrinting
-			)
-			task.cancel(initTimer)
 		end
 	end
 
@@ -285,12 +312,24 @@ function loader:LoadAll(debugPrinting: boolean?, benchmarkPrinting: boolean?)
 			continue
 		end
 		task.spawn(function()
+			debugPrint(server, client, debugPrinting :: boolean, `Loading module: {module}`)
+			local startTimer = task.spawn(createWatcherFunction(module.Name, "start"))
+			local moduleStartTime = os.clock()
 			local success, err = pcall(function()
 				module:Start()
 			end)
 			if not success then
 				warn(`{name} failed to start: {err}`)
 			end
+			debugPrint(
+				server,
+				client,
+				debugPrinting :: boolean,
+				(`{module.Name} took %.3fs to start`):format(os.clock() - moduleStartTime),
+				true,
+				benchmarkPrinting
+			)
+			task.cancel(startTimer)
 		end)
 	end
 

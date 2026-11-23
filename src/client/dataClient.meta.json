@@ -7,6 +7,14 @@
         "ServerLoadPriority": {
 
             "Float64": -50
+        },
+        "LoadPriorityEnabledClient": {
+
+            "Bool": false
+        },
+        "LoadPriorityEnabledServer": {
+
+            "Bool": false
         }
     }
 }}
