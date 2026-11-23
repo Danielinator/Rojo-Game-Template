@@ -158,7 +158,7 @@ local function loadModule(
 		server,
 		client,
 		debugPrinting,
-		(`{module.Name} took %.3fs to load`):format(os.clock() - moduleStartTime),
+		(`{module.Name} took %.3fs to init`):format(os.clock() - moduleStartTime),
 		true,
 		benchmarkPrinting
 	)
